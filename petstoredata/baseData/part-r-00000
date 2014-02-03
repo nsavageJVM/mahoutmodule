@@ -1,20 +1,20 @@
-BigPetStore,storeCode_AK,1	kelly,george,Tue Dec 30 18:02:23 EET 1969,7.5,cat-food
-BigPetStore,storeCode_AK,2	kelly,george,Fri Jan 23 08:08:54 EET 1970,10.5,dog-food
-BigPetStore,storeCode_AZ,1	hannah,glass,Mon Dec 15 08:12:25 EET 1969,30.1,snake-bite ointment
-BigPetStore,storeCode_AZ,2	hannah,glass,Tue Jan 06 21:02:33 EET 1970,25.1,leather-collar
-BigPetStore,storeCode_CA,1	shaun,boyle,Sat Jan 03 05:47:13 EET 1970,10.5,dog-food
-BigPetStore,storeCode_CA,2	tonya,savage,Tue Jan 06 21:03:45 EET 1970,16.5,organic-dog-food
-BigPetStore,storeCode_CA,3	david,warren,Tue Dec 30 20:13:06 EET 1969,7.5,cat-food
-BigPetStore,storeCode_CA,4	victor,brooks,Fri Jan 23 00:25:36 EET 1970,16.5,organic-dog-food
-BigPetStore,storeCode_CA,5	victor,brooks,Thu Dec 18 10:37:26 EET 1969,11.75,fish-food
-BigPetStore,storeCode_CA,6	victor,brooks,Mon Jan 19 12:48:56 EET 1970,7.5,cat-food
-BigPetStore,storeCode_CO,1	theresa,anthony,Sun Jan 11 17:38:25 EET 1970,30.1,antelope snacks
-BigPetStore,storeCode_CO,2	mary ann,mcintyre,Sat Dec 13 04:45:46 EET 1969,15.1,choke-collar
-BigPetStore,storeCode_CT,1	sandy,nichols,Tue Jan 20 10:27:55 EET 1970,19.1,fuzzy-collar
-BigPetStore,storeCode_CT,2	janet,levy,Sun Dec 07 20:36:36 EET 1969,7.5,cat-food
-BigPetStore,storeCode_NY,1	trey,garrett,Thu Jan 01 04:46:30 EET 1970,19.75,fish-food
-BigPetStore,storeCode_NY,2	trey,garrett,Wed Jan 14 10:08:30 EET 1970,7.5,cat-food
-BigPetStore,storeCode_NY,3	trey,garrett,Sun Dec 21 05:39:12 EET 1969,19.75,fish-food
-BigPetStore,storeCode_NY,4	trey,garrett,Sun Dec 21 11:15:59 EET 1969,7.5,cat-food
-BigPetStore,storeCode_OK,1	lindsay,hodge,Fri Dec 19 03:41:44 EET 1969,40.1,rodent-cage
-BigPetStore,storeCode_OK,2	lindsay,hodge,Mon Jan 19 12:53:34 EET 1970,13.1,duck-caller
+BigPetStore,storeCode_AK,1	shannon,wilcox,Thu Dec 11 08:26:59 EET 1969,10.5,dog-food
+BigPetStore,storeCode_AK,2	shannon,wilcox,Tue Dec 16 19:32:04 EET 1969,7.5,cat-food
+BigPetStore,storeCode_AZ,1	dan,owens,Mon Dec 08 22:26:52 EET 1969,30.1,snake-bite ointment
+BigPetStore,storeCode_AZ,2	rhonda,harvey,Sun Dec 21 02:00:13 EET 1969,25.1,leather-collar
+BigPetStore,storeCode_CA,1	carmen,huber,Sat Jan 10 04:02:15 EET 1970,15.1,choke-collar
+BigPetStore,storeCode_CA,2	debbie,pitts,Sat Dec 27 07:10:47 EET 1969,10.5,dog-food
+BigPetStore,storeCode_CA,3	brad,bowman,Sun Jan 04 10:17:14 EET 1970,25.1,leather-collar
+BigPetStore,storeCode_CA,4	brad,bowman,Thu Jan 22 15:50:54 EET 1970,25.1,leather-collar
+BigPetStore,storeCode_CA,5	brad,bowman,Wed Jan 14 07:38:08 EET 1970,15.1,choke-collar
+BigPetStore,storeCode_CA,6	brad,bowman,Wed Jan 07 16:12:00 EET 1970,10.5,dog-food
+BigPetStore,storeCode_CO,1	juanita,morse,Tue Jan 06 17:11:50 EET 1970,30.1,antelope snacks
+BigPetStore,storeCode_CO,2	juanita,morse,Fri Jan 16 12:51:11 EET 1970,7.5,cat-food
+BigPetStore,storeCode_CT,1	wyatt,fitzpatrick,Fri Dec 26 21:35:09 EET 1969,7.5,cat-food
+BigPetStore,storeCode_CT,2	carmen,henderson,Mon Dec 15 23:14:31 EET 1969,10.5,dog-food
+BigPetStore,storeCode_NY,1	ken,head,Tue Dec 30 21:22:48 EET 1969,10.5,dog-food
+BigPetStore,storeCode_NY,2	kenny,brennan,Fri Dec 12 08:52:05 EET 1969,10.5,dog-food
+BigPetStore,storeCode_NY,3	kenny,brennan,Sat Dec 27 03:36:02 EET 1969,7.5,cat-food
+BigPetStore,storeCode_NY,4	kenny,brennan,Sat Dec 20 00:22:31 EET 1969,7.5,cat-food
+BigPetStore,storeCode_OK,1	randy,swanson,Sat Dec 27 15:53:07 EET 1969,40.1,rodent-cage
+BigPetStore,storeCode_OK,2	barb,gay,Sat Jan 17 13:52:53 EET 1970,5.1,hay-bail

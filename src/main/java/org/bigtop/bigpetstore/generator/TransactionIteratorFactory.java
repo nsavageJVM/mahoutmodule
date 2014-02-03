@@ -1,10 +1,6 @@
 package org.bigtop.bigpetstore.generator;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Random;
-import java.util.TreeSet;
+import java.util.*;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.mrunit.types.*;
@@ -49,14 +45,45 @@ public class TransactionIteratorFactory {
             this.products = products;
         }
         
-        public Pair<String,Integer> randProduct(){
+        public Pair<String,Integer> randProduct() {
             String product = products[rand.nextInt(products.length-1)];
             String name = StringUtils.substringBefore(product, "_");
             Integer basePrice = Integer.parseInt(StringUtils.substringAfter(product, "_"));
-            return new Pair(name,basePrice);
+            return new Pair(name, basePrice);
         }
         
         
+    }
+
+    public static enum Person {
+
+        //Each product is separated with an _ for its base price.
+        //That is just to make it easy to add new products.
+        //Each state is associated with a relative probability.
+        Dog_Person( "dog-food_10","choke-collar_15", "leather-collar_25","duck-caller_13"),
+        Cat_Person("cat-food_8","fuzzy-collar_19","salmon-bait_30","rodent-cage_40"),
+        Fish_Person("fish-food_20","turtle-pellets_5","seal-spray_25","salmon-bait_30"),
+        Bird_Person( "duck-caller_13","rodent-cage_40","hay-bail_5","cow-dung_2"),
+        Hamster_Person( "rodent-cage_40","antelope snacks_30","hay-bail_5","duck-caller_18"  );
+
+
+        public static Random rand = new Random();
+
+        public String[] products;
+        // constructor
+        private Person( String... products) {
+
+            this.products = products;
+        }
+
+        public Pair<String,Integer> createPersonProduct(){
+            String product = products[rand.nextInt(products.length-1)];
+            String name = StringUtils.substringBefore(product, "_");
+            Integer basePrice = Integer.parseInt(StringUtils.substringAfter(product, "_"));
+            return new Pair(name, basePrice);
+        }
+
+
     }
 
 
@@ -76,8 +103,8 @@ public class TransactionIteratorFactory {
 
 	Random r ;
 	public TransactionIteratorFactory(final int records, final STATE state) {
-	    
-	    /**
+
+        /**
 	     * Random is seeded by STATE.  This way similar names will be randomly selected for 
 	     * states .  
 	     */
@@ -98,6 +125,10 @@ public class TransactionIteratorFactory {
             int repeat=0;
             String fname=randFirstName();
             String lname=randLastName();
+            String nameForHash = fname+lname;
+
+
+
             @Override
             public KeyVal<String, String> next() {
                 /**
@@ -111,9 +142,18 @@ public class TransactionIteratorFactory {
                     lname = randLastName();
                     repeat=(int) (r.nextGaussian()*10f);
                 }
+
+                int personClassifier = Math.abs( nameForHash.hashCode() % 31);
+                //do person filter state getProduct
+
+                // key is the state, vla is the rest of the data
+                // key =BigPetStore,storeCode_AZ,1  val = chastity,browning,Wed Dec 17 02:28:33 EET 1969,10.5,dog-food
+               // product_price is product (name, price) ie product_price.getFirst() is name
                 String key, val;
                     key = join(",", "BigPetStore", "storeCode_"+state.name(), trans_id++ + "");
-                    Pair<String,Integer> product_price = state.randProduct();
+
+                    Pair<String,Integer> product_price = combineEnumsForPatterns(personClassifier,state);
+
                     val = join(",",
                                fname,
                                lname,
@@ -133,6 +173,49 @@ public class TransactionIteratorFactory {
 	    
 	    };
 	}
+
+    // 50% chance product will relate to a person
+    private Pair<String,Integer> combineEnumsForPatterns(int personClassifier, final STATE state) {
+
+        Pair<String,Integer> product_price = null;
+        List<Person > personProductList =
+                Arrays.asList(TransactionIteratorFactory.Person.values());
+        // create a filter to create person types
+
+        switch (personClassifier) {
+            case 1:  case 2:  product_price = personProductList.get(0).createPersonProduct();
+                System.out.println("TransactionIteratorFactory create product on dog person.createPersonProduct(0) "+personClassifier);
+                System.out.println("TransactionIteratorFactory create product on person.createPersonProduct(0) "+product_price.getFirst());
+                break;
+            case 5:  case 6:  product_price =  personProductList.get(1).createPersonProduct();
+                System.out.println("TransactionIteratorFactory create product on cat person.createPersonProduct(1) "+personClassifier);
+                System.out.println("TransactionIteratorFactory create product on person.createPersonProduct(1) "+product_price.getFirst());
+                break;
+            case 9:  case 10:  product_price =  personProductList.get(2).createPersonProduct();
+                System.out.println("TransactionIteratorFactory create product on fish person.createPersonProduct(2) "+personClassifier);
+                System.out.println("TransactionIteratorFactory create product on person.createPersonProduct(2) "+product_price.getFirst());
+                break;
+            case 15:  case 16:  product_price =  personProductList.get(3).createPersonProduct();
+                System.out.println("TransactionIteratorFactory create product on bird person.createPersonProduct(3) "+personClassifier);
+                System.out.println(" create product on person.createPersonProduct(3) "+product_price.getFirst());
+                break;
+            case 20:  case 21: product_price =  personProductList.get(4).createPersonProduct();
+                System.out.println("TransactionIteratorFactory create product on hamster person.createPersonProduct(4) "+personClassifier);
+                System.out.println(" create product on person.createPersonProduct(4) "+product_price.getFirst());
+                break;
+            default:   product_price = state.randProduct();
+                System.out.println("TransactionIteratorFactory create product on non person type ");
+                System.out.println("TransactionIteratorFactory create product on person.createPersonProduct(4) "+ product_price.getFirst() );
+                break;
+
+        }
+
+
+        return product_price;
+    }
+
+
+
 
 	/**
 	 * Add some decimals to the price;

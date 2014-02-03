@@ -105,10 +105,11 @@ public class GeneratePetStoreTransactionsInputFormat extends
 		/**
 		 * Generator class will take a state as input and generate all 
 		 * the data for that state.
+         * for each state in State
 		 */
 		for(TransactionIteratorFactory.STATE s : STATE.values())
 		{
-			PetStoreTransactionInputSplit split = 
+			PetStoreTransactionInputSplit split =
 			        new PetStoreTransactionInputSplit(
 			                (int)(Math.ceil(num_records_desired * s.probability)),s);
 			System.out.println(s + " _ "+split.records);

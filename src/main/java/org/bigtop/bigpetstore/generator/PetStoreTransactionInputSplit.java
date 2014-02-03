@@ -19,10 +19,10 @@ import org.bigtop.bigpetstore.generator.TransactionIteratorFactory.STATE;
 public class PetStoreTransactionInputSplit extends InputSplit implements Writable {
 
 
-	public PetStoreTransactionInputSplit() {
-	}
+	public PetStoreTransactionInputSplit() {  }
 
 	public int records; public STATE state;
+
 	public PetStoreTransactionInputSplit(int records,STATE state) {
         this.records=records;
         this.state=state;

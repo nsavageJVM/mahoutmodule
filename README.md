@@ -7,5 +7,5 @@ in org.bigtop.bigpetstore.generator.TransactionIteratorFactory
 
 generate 5 different person types {multi-types>}, using hash alogorithm
 person types one to many
-model    
+model
 person distribution certain types of people buy certain types of products independent of state
