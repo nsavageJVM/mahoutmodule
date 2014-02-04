@@ -172,7 +172,12 @@ public class MahoutMathTest  {
             String state = tmp[1];
             //last 1
             String product = lines[lines.length -1];
-
+            // new code
+            String[] tmp1 = lines[2].split("\t");
+            String firstName = tmp1[1];
+            String lastName = lines[3];
+            String hashName = firstName+lastName;
+            int nameId = Math.abs(hashName.hashCode());
             for(PreferenceValues prefcategory : enumSet){
 
                 if(prefcategory.getPref(product) != null  ) {
@@ -181,7 +186,7 @@ public class MahoutMathTest  {
 
                 }
             }
-            System.out.println("state "+state+" product "+product+" preference "+pref);
+            System.out.println("nameId "+nameId+" product "+product+" preference "+pref);
         }
 
       }
