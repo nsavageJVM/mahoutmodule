@@ -28,9 +28,12 @@ public class BigPStoreDataExtractorLucene {
 
     final static Logger log = LoggerFactory.getLogger(BigPStoreDataExtractorLucene.class);
 
-    public static DataModel  doBigPStoreDataExtractor(File dataFile) throws Exception {
-        DataModel model = null;
+    public static  List<String>  doBigPStoreDataExtractorUniqueTokens(File dataFile) throws Exception {
+
         final List<String> fields = Lists.newArrayList();
+
+        List<String> words = Lists.newArrayList();
+
         AutoDetectParser p = new AutoDetectParser();
 
         FileInputStream fileStream=new FileInputStream(dataFile);
@@ -49,7 +52,7 @@ public class BigPStoreDataExtractorLucene {
                     }
                 }), new Metadata());
 
-        log.info("BigPStoreDataExtractorLucene "+fields);
+        log.info("BigPStoreDataExtractorLucene Raw Data "+fields);
 
 
 
@@ -69,7 +72,7 @@ public class BigPStoreDataExtractorLucene {
         ts = new LowerCaseFilter(Version.LUCENE_43, ts);
         CharTermAttribute termAtt = ts.addAttribute(CharTermAttribute.class);
         ts.reset();
-        List<String> words = Lists.newArrayList();
+
 
         while (ts.incrementToken()) {
             char[] termBuffer = termAtt.buffer();
@@ -81,9 +84,38 @@ public class BigPStoreDataExtractorLucene {
 
         log.info("BigPStoreDataExtractorLucene words for analysis "+words);
 
-        return model;
+        return words;
     }
 
+    public static  List<String>  doBigPStoreDataExtractorRawData(File dataFile) throws Exception {
+
+        final List<String> fields = Lists.newArrayList();
+
+        List<String> words = Lists.newArrayList();
+
+        AutoDetectParser p = new AutoDetectParser();
+
+        FileInputStream fileStream=new FileInputStream(dataFile);
+
+        byte[] arr= new byte[(int)dataFile.length()];
+
+        fileStream.read(arr,0,arr.length);
+        // puts it all into 1 big string
+        p.parse(new ByteArrayInputStream(arr), new TextContentHandler(new DefaultHandler()  {
+
+            @Override
+            public void characters(char[] ch, int start, int length) throws SAXException {
+                CharBuffer buf = CharBuffer.wrap(ch, start, length);
+                String s = buf.toString();
+                fields.add(s);
+            }
+        }), new Metadata());
+
+        log.info("BigPStoreDataExtractorLucene Raw Data "+fields);
+
+
+        return fields;
+    }
 
 
 }

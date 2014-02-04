@@ -1,5 +1,8 @@
 package org.bigtop.bigpetstore.generator;
 
+import au.com.bytecode.opencsv.CSVParser;
+import com.google.common.collect.*;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -15,9 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.lang.reflect.Array;
+import java.util.*;
 
 /**
  * Created by ubu on 2/1/14.
@@ -28,7 +30,7 @@ public class MahoutMathTest  {
 
     Path output = new Path("petstoredata/baseData");
 
-    @Test
+    @Before
     public void setUpTestData() throws Exception {
         int records = 20;
         /**
@@ -50,76 +52,170 @@ public class MahoutMathTest  {
 
     }
 
+   //
+    public void test() throws Exception {
 
-    public void test() throws Exception{
+        Map<String, Map<String, Integer>> productTable = Maps.newHashMap();
+        List<String> states  = ImmutableList.of("AZ", "AK", "CT", "OK", "CO", "CA", "NY");
 
-        log.info("MahoutMathTest");
-        FileSystem fs =  FileSystem.getLocal(new Configuration());
-        Path output = new Path("petstoredata");
-        DataInputStream f= fs.open(new Path(output,"part-r-00000"));
-        BufferedReader br=new BufferedReader(new InputStreamReader(f));
-        String s;
+        Map<String, Integer> rowMapAZ = new ImmutableMap.Builder<String, Integer>()
+                .put("dog-food_10", 1)
+                .put("cat-food_8", 2)
+                .put("leather-collar_25", 3)
+                .put("snake-bite ointment_30", 4)
+                .put("turtle-food_11", 5)
+                .build();
 
-        while(br.ready()){
-            s=br.readLine();
-            log.info(s);
+        productTable.put(states.get(0), rowMapAZ);
 
-        }
+        Map<String, Integer> rowMapAK = new ImmutableMap.Builder<String, Integer>()
+                .put("dog-food_10", 1)
+                .put("cat-food_8", 2)
+                .put("fuzzy-collar_19", 3)
+                .put("antelope-caller_20", 4)
+                .put("salmon-bait_30", 5)
+                .build();
 
-        DataModel model = BigPStoreDataExtractorLucene.doBigPStoreDataExtractor(new File("./petstoredata/part-r-00000"));
+        productTable.put(states.get(1), rowMapAK);
 
+        Map<String, Integer> rowMapCT = new ImmutableMap.Builder<String, Integer>()
+                .put("dog-food_10", 1)
+                .put("cat-food_8", 2)
+                .put("fuzzy-collar_19", 3)
+                .put("turtle-pellets_5", 4)
+                .build();
+
+        productTable.put(states.get(2), rowMapCT);
+
+        Map<String, Integer> rowMapOK = new ImmutableMap.Builder<String, Integer>()
+                .put("dog-food_10", 1)
+                .put("cat-food_8", 2)
+                .put("duck-caller_13", 3)
+                .put("rodent-cage_40", 4)
+                .put("hay-bail_5", 5)
+                .put("cow-dung_2", 6)
+                .build();
+
+        productTable.put(states.get(3), rowMapOK);
+
+        Map<String, Integer> rowMapCO = new ImmutableMap.Builder<String, Integer>()
+                .put("dog-food_10", 1)
+                .put("cat-food_8", 2)
+                .put("choke-collar_15", 3)
+                .put("antelope snacks_30", 4)
+                .put("duck-caller_18", 5)
+                .build();
+
+        productTable.put(states.get(4), rowMapCO);
+
+        Map<String, Integer> rowMapCA = new ImmutableMap.Builder<String, Integer>()
+                .put("dog-food_10", 1)
+                .put("cat-food_8", 2)
+                .put("fish-food_12", 3)
+                .put("organic-dog-food_16", 4)
+                .put("turtle-pellets_5", 5)
+                .build();
+
+        productTable.put(states.get(5), rowMapCA);
+
+        Map<String, Integer> rowMapNY = new ImmutableMap.Builder<String, Integer>()
+                .put("dog-food_10", 1)
+                .put("cat-food_8", 2)
+                .put("steel-leash_20", 3)
+                .put("fish-food_20", 4)
+                .put("seal-spray_25", 5)
+                .build();
+
+        productTable.put(states.get(6),rowMapNY );
+
+
+            System.out.println(productTable);
+
+
+        String csvLine = "BigPetStore,storeCode_AK,1\tchris,whitaker,Wed Dec 17 03:38:36 EET 1969,15.1,choke-collar";
+
+
+        String[] lines = new CSVParser().parseLine(csvLine);
+        String[] tmp = lines[1].split("_");
+        String state = tmp[1];
+        String product = lines[lines.length -1];
+        System.out.println("state "+state+" product "+product+" preference ");
 
     }
 
+
+  private void doNothing() throws Exception {
+      List<String>  model =
+              BigPStoreDataExtractorLucene.doBigPStoreDataExtractorRawData(
+                      new File("./petstoredata/baseData/part-r-00000"));
+
+
+      for (String s : model) {
+          System.out.println("model.size " +model.size());
+          //   System.out.println("user " +model.get(2)+ " " +model.get(3)+"product " +model.get(4));
+      }
+
+    }
 
     @Test
-    public void testEnums() throws Exception {
+    public void setUpPreferenceData() throws Exception {
+        EnumSet<PreferenceValues> enumSet = EnumSet.allOf(PreferenceValues.class);
+        FileReader fileReader = new FileReader(new File("./petstoredata/baseData/part-r-00000"));
+        BufferedReader br = new BufferedReader(fileReader);
 
-        Pair<String,Integer>  results = combineEnumsForPatterns(5, TransactionIteratorFactory.STATE.AK);
+        String csvLine = null;
+        // if no more lines the readLine() returns null
+        while ((csvLine = br.readLine()) != null) {
+            Integer pref = null;
+            String[] lines = new CSVParser().parseLine(csvLine);
+            String[] tmp = lines[1].split("_");
+            String state = tmp[1];
+            //last 1
+            String product = lines[lines.length -1];
 
+            for(PreferenceValues prefcategory : enumSet){
 
-    }
+                if(prefcategory.getPref(product) != null  ) {
+                 pref =prefcategory.getPref(product);
+               //  System.out.println("matched element on "+prefcategory+",  preference = "+pref);
 
-
-    // 50% chance product will relate to a person
-    private Pair<String,Integer> combineEnumsForPatterns(int personClassifier, final TransactionIteratorFactory.STATE state) {
-
-        Pair<String,Integer> product_price = null;
-        List<TransactionIteratorFactory.Person> personProductList =
-                Arrays.asList(TransactionIteratorFactory.Person.values());
-        // create a filter to create person types
-
-        switch (personClassifier) {
-            case 1:  case 2:  product_price = personProductList.get(0).createPersonProduct();
-                System.out.println(" create product on dog person.createPersonProduct(0) "+personClassifier);
-                System.out.println(" create product on person.createPersonProduct(0) "+product_price.getFirst());
-                break;
-            case 5:  case 6:  product_price =  personProductList.get(1).createPersonProduct();
-                System.out.println(" create product on cat person.createPersonProduct(1) "+personClassifier);
-                System.out.println(" create product on person.createPersonProduct(1) "+product_price.getFirst());
-                break;
-            case 9:  case 10:  product_price =  personProductList.get(2).createPersonProduct();
-                System.out.println(" create product on fish person.createPersonProduct(2) "+personClassifier);
-                System.out.println(" create product on person.createPersonProduct(2) "+product_price.getFirst());
-                break;
-            case 15:  case 16:  product_price =  personProductList.get(3).createPersonProduct();
-                System.out.println(" create product on bird person.createPersonProduct(3) "+personClassifier);
-                System.out.println(" create product on person.createPersonProduct(3) "+product_price.getFirst());
-                break;
-            case 20:  case 21: case 22: case 27: product_price =  personProductList.get(4).createPersonProduct();
-                System.out.println(" create product on hamster person.createPersonProduct(4) "+personClassifier);
-                System.out.println(" create product on person.createPersonProduct(4) "+product_price.getFirst());
-                break;
-            default:   product_price = state.randProduct();
-                System.out.println(" create product on non person type ");
-                System.out.println(" create product on person.createPersonProduct(4) "+ product_price.getFirst() );
-                break;
-
+                }
+            }
+            System.out.println("state "+state+" product "+product+" preference "+pref);
         }
 
+      }
 
-        return product_price;
+
+
+    public static enum PreferenceValues {
+
+        No_Pref("0", "dog-food_10","choke-collar_15", "leather-collar_25","duck-caller_13"),
+        Low_Pref("1", "cat-food_8","fuzzy-collar_19","salmon-bait_30", "antelope-caller_20"),
+        Mid_Pref("2", "fish-food_20","turtle-pellets_5","seal-spray_25","salmon-bait_30", "snake-bite ointment_30"),
+        Med_Pref( "3", "choke-collar_15", "antelope snacks_30", "hay-bail_5","cow-dung_2", "turtle-food_11"),
+        High_Pref("4", "rodent-cage_40","antelope snacks_30","hay-bail_5","steel-leash_20","organic-dog-food_16" );
+
+
+        public String[] preferences;
+        // constructor
+        private PreferenceValues( String... preferences) {
+
+            this.preferences = preferences;
+        }
+
+        public Integer getPref(String match) {
+            Integer result = null;
+            for(String s :preferences) {
+                String[] tmp  = s.split("_");
+                  if (match.equals(tmp[0])) {
+                      result = Integer.parseInt(preferences[0]);
+                   //   System.out.println("matched element in enum "+match+",  preference = "+result);
+
+                  }
+            }
+
+            return  result;
+            }
+        }
     }
-
-
-}

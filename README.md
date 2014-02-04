@@ -9,3 +9,7 @@ generate 5 different person types {multi-types>}, using hash alogorithm
 person types one to many
 model
 person distribution certain types of people buy certain types of products independent of state
+
+https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet
+
+http://www.slideshare.net/sscdotopen/mahoutcf
