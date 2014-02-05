@@ -159,14 +159,15 @@ public class MahoutMathTest  {
 
     @Test
     public void setUpPreferenceData() throws Exception {
-        EnumSet<PreferenceValues> enumSet = EnumSet.allOf(PreferenceValues.class);
+        // this is a filter set where the filter is a list of products with their probability
+        EnumSet<PreferenceValues> filterSet = EnumSet.allOf(PreferenceValues.class);
+        // get the raw data to filter
         FileReader fileReader = new FileReader(new File("./petstoredata/baseData/part-r-00000"));
         BufferedReader br = new BufferedReader(fileReader);
-
         String csvLine = null;
         // if no more lines the readLine() returns null
         while ((csvLine = br.readLine()) != null) {
-            Integer pref = null;
+            Pair<String,Integer> pref = null;
             String[] lines = new CSVParser().parseLine(csvLine);
             String[] tmp = lines[1].split("_");
             String state = tmp[1];
@@ -178,15 +179,18 @@ public class MahoutMathTest  {
             String lastName = lines[3];
             String hashName = firstName+lastName;
             int nameId = Math.abs(hashName.hashCode());
-            for(PreferenceValues prefcategory : enumSet){
+            for(PreferenceValues filter : filterSet){
 
-                if(prefcategory.getPref(product) != null  ) {
-                 pref =prefcategory.getPref(product);
-               //  System.out.println("matched element on "+prefcategory+",  preference = "+pref);
-
+                if(filter.getPref(product, filter.name()) != null  ) {
+                   pref =filter.getPref(product, filter.name());
+               //  System.out.println("matched element on "+filter+",  preference = "+pref);
+                    if (!pref.getFirst().equals("nomatch"))
+                    System.out.println("nameId "+nameId+" product "+product+" preference "+pref);
                 }
             }
-            System.out.println("nameId "+nameId+" product "+product+" preference "+pref);
+
+
+
         }
 
       }
@@ -209,18 +213,28 @@ public class MahoutMathTest  {
             this.preferences = preferences;
         }
 
-        public Integer getPref(String match) {
-            Integer result = null;
+        public Pair<String,Integer>  getPref(String match, String filterName) {
+            Integer pref = null;
+            String counter = null;
+            Pair<String,Integer> pair = null;
+            int k = 0;
             for(String s :preferences) {
                 String[] tmp  = s.split("_");
                   if (match.equals(tmp[0])) {
-                      result = Integer.parseInt(preferences[0]);
-                   //   System.out.println("matched element in enum "+match+",  preference = "+result);
+                      pref = Integer.parseInt(preferences[0]);
+                      System.out.println("matched element "+match+" for filter "+filterName+", with preference = "+pref);
+                      counter = ""+pref+""+k;
+                      k++;
+                      pair = new  Pair(counter, pref);
+                    break;
+                  } else {
+                      pair = new  Pair("nomatch", 0);
 
                   }
-            }
 
-            return  result;
+
+            }
+            return pair;
             }
         }
     }
