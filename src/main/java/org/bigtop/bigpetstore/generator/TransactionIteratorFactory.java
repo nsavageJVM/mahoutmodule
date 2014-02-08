@@ -54,7 +54,7 @@ public class TransactionIteratorFactory {
         
         
     }
-
+    // joins on product price/selection
     public static enum Person {
 
         //Each product is separated with an _ for its base price.
@@ -181,7 +181,7 @@ public class TransactionIteratorFactory {
         List<Person > personProductList =
                 Arrays.asList(TransactionIteratorFactory.Person.values());
         // create a filter to create person types
-
+        // acts on the hash and selects a subset of data where it follows a person pattern in product selection
         switch (personClassifier) {
             case 1:  case 2:  product_price = personProductList.get(0).createPersonProduct();
                 System.out.println("TransactionIteratorFactory create product on dog person.createPersonProduct(0) "+personClassifier);
