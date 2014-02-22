@@ -1,7 +1,5 @@
 package org.bigtop.bigpetstore.generator;
 
-import au.com.bytecode.opencsv.CSVParser;
-import au.com.bytecode.opencsv.CSVWriter;
 import com.google.common.collect.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.conf.Configuration;
@@ -33,7 +31,7 @@ public class MahoutMathTest  {
 
     @Before
     public void setUpTestData() throws Exception {
-        int records = 20;
+        int records = 100;
         /**
          * Setup configuration with prop.
          */
@@ -61,8 +59,6 @@ public class MahoutMathTest  {
 
         // get the raw data to filter
         FileReader fileReader = new FileReader(new File("./petstoredata/baseData/part-r-00000"));
-        // write results
-        CSVWriter writer = new CSVWriter(new FileWriter("./petstoredata/recommend.csv"), ',',CSVWriter.NO_QUOTE_CHARACTER);
 
         List<String[]> dataOutBuffer = Lists.newArrayList();
         BufferedReader br = new BufferedReader(fileReader);
@@ -70,7 +66,7 @@ public class MahoutMathTest  {
         // if no more lines the readLine() returns null
         while ((csvLine = br.readLine()) != null) {
             Map<String, Integer> result = null;
-            String[] lines = new CSVParser().parseLine(csvLine);
+            String[] lines = csvLine.split(",");
             String[] tmp = lines[1].split("_");
             String state = tmp[1];
             //last 1
@@ -91,15 +87,29 @@ public class MahoutMathTest  {
                         String data = "found pref value: "+result.get("filterPrefValue")+" for filter name "+
                                 filter.name()+ " with user hash value "+nameId+ " and productId "+result.get("filterId");
                         System.out.println(data);
-                        String[] entries = {nameId.toString(), result.get("filterId").toString(),  result.get("filterPrefValue").toString() };
+                        String[] entries = {nameId.toString(), result.get("filterId").toString(),
+                                result.get("filterPrefValue").toString(), ""+new Date().getTime()  };
                         dataOutBuffer.add(entries);
                     }
                 }
             }
 
         }
-        writer.writeAll(dataOutBuffer);
-        writer.close();
+
+        File file = new File("./petstoredata/recommend.csv");
+        // if file doesnt exists, then create it
+        if (!file.exists()) {
+            file.createNewFile();
+        }
+
+        FileWriter fw = new FileWriter(file.getAbsoluteFile());
+        BufferedWriter bw = new BufferedWriter(fw);
+        for ( String[] sList: dataOutBuffer) {
+           String csvOutLine = sList[0]+ '\t' +sList[1]+ '\t'  +sList[2]+ '\t' +sList[3]+ '\n';
+            bw.write(csvOutLine);
+        }
+        bw.flush();
+        fw.close();
     }
 
 
@@ -148,98 +158,6 @@ public class MahoutMathTest  {
 
 
 
-
-
-   // legacy code this approach is far from optimal
-    public void test() throws Exception {
-
-        Map<String, Map<String, Integer>> productTable = Maps.newHashMap();
-        List<String> states  = ImmutableList.of("AZ", "AK", "CT", "OK", "CO", "CA", "NY");
-
-        Map<String, Integer> rowMapAZ = new ImmutableMap.Builder<String, Integer>()
-                .put("dog-food_10", 1)
-                .put("cat-food_8", 2)
-                .put("leather-collar_25", 3)
-                .put("snake-bite ointment_30", 4)
-                .put("turtle-food_11", 5)
-                .build();
-
-        productTable.put(states.get(0), rowMapAZ);
-
-        Map<String, Integer> rowMapAK = new ImmutableMap.Builder<String, Integer>()
-                .put("dog-food_10", 1)
-                .put("cat-food_8", 2)
-                .put("fuzzy-collar_19", 3)
-                .put("antelope-caller_20", 4)
-                .put("salmon-bait_30", 5)
-                .build();
-
-        productTable.put(states.get(1), rowMapAK);
-
-        Map<String, Integer> rowMapCT = new ImmutableMap.Builder<String, Integer>()
-                .put("dog-food_10", 1)
-                .put("cat-food_8", 2)
-                .put("fuzzy-collar_19", 3)
-                .put("turtle-pellets_5", 4)
-                .build();
-
-        productTable.put(states.get(2), rowMapCT);
-
-        Map<String, Integer> rowMapOK = new ImmutableMap.Builder<String, Integer>()
-                .put("dog-food_10", 1)
-                .put("cat-food_8", 2)
-                .put("duck-caller_13", 3)
-                .put("rodent-cage_40", 4)
-                .put("hay-bail_5", 5)
-                .put("cow-dung_2", 6)
-                .build();
-
-        productTable.put(states.get(3), rowMapOK);
-
-        Map<String, Integer> rowMapCO = new ImmutableMap.Builder<String, Integer>()
-                .put("dog-food_10", 1)
-                .put("cat-food_8", 2)
-                .put("choke-collar_15", 3)
-                .put("antelope snacks_30", 4)
-                .put("duck-caller_18", 5)
-                .build();
-
-        productTable.put(states.get(4), rowMapCO);
-
-        Map<String, Integer> rowMapCA = new ImmutableMap.Builder<String, Integer>()
-                .put("dog-food_10", 1)
-                .put("cat-food_8", 2)
-                .put("fish-food_12", 3)
-                .put("organic-dog-food_16", 4)
-                .put("turtle-pellets_5", 5)
-                .build();
-
-        productTable.put(states.get(5), rowMapCA);
-
-        Map<String, Integer> rowMapNY = new ImmutableMap.Builder<String, Integer>()
-                .put("dog-food_10", 1)
-                .put("cat-food_8", 2)
-                .put("steel-leash_20", 3)
-                .put("fish-food_20", 4)
-                .put("seal-spray_25", 5)
-                .build();
-
-        productTable.put(states.get(6),rowMapNY );
-
-
-            System.out.println(productTable);
-
-
-        String csvLine = "BigPetStore,storeCode_AK,1\tchris,whitaker,Wed Dec 17 03:38:36 EET 1969,15.1,choke-collar";
-
-
-        String[] lines = new CSVParser().parseLine(csvLine);
-        String[] tmp = lines[1].split("_");
-        String state = tmp[1];
-        String product = lines[lines.length -1];
-        System.out.println("state "+state+" product "+product+" preference ");
-
-    }
 
 
   private void doNothing() throws Exception {
