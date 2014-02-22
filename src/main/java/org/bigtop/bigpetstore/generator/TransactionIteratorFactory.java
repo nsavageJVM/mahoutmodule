@@ -4,6 +4,8 @@ import java.util.*;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.mrunit.types.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class generates our data.
@@ -22,7 +24,7 @@ public class TransactionIteratorFactory {
      * In this case colorado represents the majority 
      * of the transactions.
      */
-    
+    final static Logger log= LoggerFactory.getLogger(TransactionIteratorFactory.class);
     
     public static enum STATE {
         
@@ -184,28 +186,28 @@ public class TransactionIteratorFactory {
         // acts on the hash and selects a subset of data where it follows a person pattern in product selection
         switch (personClassifier) {
             case 1:  case 2:  product_price = personProductList.get(0).createPersonProduct();
-                System.out.println("TransactionIteratorFactory create product on dog person.createPersonProduct(0) "+personClassifier);
-                System.out.println("TransactionIteratorFactory create product on person.createPersonProduct(0) "+product_price.getFirst());
+                log.info("TransactionIteratorFactory create product on dog person.createPersonProduct(0) "+personClassifier);
+                log.info("TransactionIteratorFactory create product on person.createPersonProduct(0) "+product_price.getFirst());
                 break;
             case 5:  case 6:  product_price =  personProductList.get(1).createPersonProduct();
-                System.out.println("TransactionIteratorFactory create product on cat person.createPersonProduct(1) "+personClassifier);
-                System.out.println("TransactionIteratorFactory create product on person.createPersonProduct(1) "+product_price.getFirst());
+                log.info("TransactionIteratorFactory create product on cat person.createPersonProduct(1) "+personClassifier);
+                log.info("TransactionIteratorFactory create product on person.createPersonProduct(1) "+product_price.getFirst());
                 break;
             case 9:  case 10:  product_price =  personProductList.get(2).createPersonProduct();
-                System.out.println("TransactionIteratorFactory create product on fish person.createPersonProduct(2) "+personClassifier);
-                System.out.println("TransactionIteratorFactory create product on person.createPersonProduct(2) "+product_price.getFirst());
+                log.info("TransactionIteratorFactory create product on fish person.createPersonProduct(2) "+personClassifier);
+                log.info("TransactionIteratorFactory create product on person.createPersonProduct(2) "+product_price.getFirst());
                 break;
             case 15:  case 16:  product_price =  personProductList.get(3).createPersonProduct();
-                System.out.println("TransactionIteratorFactory create product on bird person.createPersonProduct(3) "+personClassifier);
-                System.out.println(" create product on person.createPersonProduct(3) "+product_price.getFirst());
+                log.info("TransactionIteratorFactory create product on bird person.createPersonProduct(3) "+personClassifier);
+                log.info(" create product on person.createPersonProduct(3) "+product_price.getFirst());
                 break;
             case 20:  case 21: product_price =  personProductList.get(4).createPersonProduct();
-                System.out.println("TransactionIteratorFactory create product on hamster person.createPersonProduct(4) "+personClassifier);
-                System.out.println(" create product on person.createPersonProduct(4) "+product_price.getFirst());
+                log.info("TransactionIteratorFactory create product on hamster person.createPersonProduct(4) "+personClassifier);
+                log.info(" create product on person.createPersonProduct(4) "+product_price.getFirst());
                 break;
             default:   product_price = state.randProduct();
-                System.out.println("TransactionIteratorFactory create product on non person type ");
-                System.out.println("TransactionIteratorFactory create product on person.createPersonProduct(4) "+ product_price.getFirst() );
+                log.info("TransactionIteratorFactory create product on non person type ");
+                log.info("TransactionIteratorFactory create product on person.createPersonProduct(4) "+ product_price.getFirst() );
                 break;
 
         }
